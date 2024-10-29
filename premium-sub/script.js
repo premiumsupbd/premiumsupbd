@@ -1,70 +1,26 @@
-
-const products = [
-    {
-        id: 1,
-        name: "Netflix Premium",
-        description: "4K HDR streaming, 4 screens simultaneously",
-        price: 19.99,
-        duration: "1 Month",
-        image: "https://akm-img-a-in.tosshub.com/indiatoday/images/story/202012/Netflix-New-Feature-Audio-Only_1200x768.jpeg?size=690:388",
-        category: "Streaming"
-    },
-    {
-        id: 2,
-        name: "ExpressVPN",
-        description: "Secure, fast VPN with servers in 94 countries",
-        price: 12.99,
-        duration: "1 Month",
-        image: "https://www.fastestvpnguide.com/wp-content/uploads/2021/02/expressvpn-review.jpg",
-        category: "VPN"
-    },
-    {
-        id: 3,
-        name: "YouTube Premium",
-        description: "Ad-free videos, background play, and YouTube Music",
-        price: 11.99,
-        duration: "1 Month",
-        image: "https://th.bing.com/th/id/OIP.6JqTEbu1dDsHNFDNF0BVrAHaFj?rs=1&pid=ImgDetMain",
-        category: "Streaming"
-    },
-    {
-        id: 4,
-        name: "Spotify Premium",
-        description: "Ad-free music streaming with offline downloads",
-        price: 9.99,
-        duration: "1 Month",
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeSxI2BzkmYfvGqWUDnOn697vxq2cof6WlqafyZbSu5f4YNPYrCTOIedy3l0hiSUtECTA&usqp=CAU",
-        category: "Streaming"
-    },
-    {
-        id: 5,
-        name: "NordVPN",
-        description: "Military-grade encryption and unlimited bandwidth",
-        price: 11.99,
-        duration: "1 Month",
-        image: "https://cdn.technadu.com/wp-content/uploads/2024/05/NordVPN-Review-Featured.jpg",
-        category: "VPN"
-    },
-    {
-        id: 6,
-        name: "Discord Nitro",
-        description: "Enhanced Discord experience with custom emojis",
-        price: 9.99,
-        duration: "1 Month",
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjoovOxDtIeOEfEs4rmEj1PcxDdbS50G8NNM3jADtGVAvgf-6mheYoTunosqiJDxexpxM&usqp=CAU",
-        category: "Gaming"
-    }
-];
-
 let cart = [];
 let activeCategory = "All";
+let products = [];
+const productsUrl = "https://raw.githubusercontent.com/premiumsupbd/json/refs/heads/main/items.json";
 
 function initStore() {
-    displayProducts();
+    fetchProducts();
     setupCategoryButtons();
 }
 
-function displayProducts() {
+function fetchProducts() {
+    fetch(productsUrl)
+        .then(response => response.json())
+        .then(data => {
+            products = data; // Store the fetched products in the global variable
+            displayProducts(data);
+        })
+        .catch(error => {
+            console.error('Error fetching products:', error);
+        });
+}
+
+function displayProducts(products) {
     const productsGrid = document.getElementById('productsGrid');
     productsGrid.innerHTML = '';
 
@@ -96,7 +52,7 @@ function setupCategoryButtons() {
             buttons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
             activeCategory = button.textContent;
-            displayProducts();
+            displayProducts(products); // Display products based on active category
         });
     });
 }
